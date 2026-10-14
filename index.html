@@ -21,12 +21,18 @@
 <button id="mic">🎤 Speak</button>
 
 <script>
-// Add your own objects: accepted answers (a) and .glb model (m)
+const base = "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/";
 const items = [
-  {a:["duck"],   m:"https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF-Binary/Duck.glb"},
-  {a:["fox"],    m:"https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Fox/glTF-Binary/Fox.glb"},
-  {a:["avocado"],m:"https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Avocado/glTF-Binary/Avocado.glb"},
-  {a:["lantern","lamp"], m:"https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Lantern/glTF-Binary/Lantern.glb"}
+  {a:["duck","ducky"], m:base+"Duck/glTF-Binary/Duck.glb"},
+  {a:["fox"],          m:base+"Fox/glTF-Binary/Fox.glb"},
+  {a:["avocado"],      m:base+"Avocado/glTF-Binary/Avocado.glb"},
+  {a:["lantern","lamp"], m:base+"Lantern/glTF-Binary/Lantern.glb"},
+  {a:["bottle","water bottle"], m:base+"WaterBottle/glTF-Binary/WaterBottle.glb"},
+  {a:["truck","lorry"], m:base+"CesiumMilkTruck/glTF-Binary/CesiumMilkTruck.glb"},
+  {a:["car","toy car"], m:base+"ToyCar/glTF-Binary/ToyCar.glb"},
+  {a:["chair"],        m:base+"SheenChair/glTF-Binary/SheenChair.glb"},
+  {a:["camera"],       m:base+"AntiqueCamera/glTF-Binary/AntiqueCamera.glb"},
+  {a:["fish"],         m:base+"BarramundiFish/glTF-Binary/BarramundiFish.glb"}
 ];
 let i = 0;
 const mv = document.getElementById("mv"), msg = document.getElementById("msg");
@@ -36,7 +42,7 @@ const show = () => { mv.src = items[i].m; };
 show();
 
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-if (!SR) msg.textContent = "Please open in Chrome for voice.";
+if (!SR) msg.textContent = "Voice isn't supported in this browser. Try Chrome or Safari.";
 else {
   const r = new SR(); r.lang = "en-US";
   r.onresult = e => {
@@ -49,6 +55,10 @@ else {
   };
   r.onerror = () => say("I couldn't hear you. Tap the mic again.");
   document.getElementById("mic").onclick = () => { msg.textContent = "Listening... 👂"; r.start(); };
+}
+</script>
+</body>
+</html>
 }
 </script>
 </body>
