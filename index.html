@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What is this?</title>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+<style>
+  body{font-family:sans-serif;text-align:center;background:#eef6ff;margin:0;padding:12px}
+  model-viewer{width:100%;height:55vh;background:#fff;border-radius:16px}
+  button{font-size:1.4rem;padding:14px 28px;margin:10px;border:0;border-radius:14px;background:#4a90e2;color:#fff}
+  #msg{font-size:1.5rem;min-height:2em}
+</style>
+</head>
+<body>
+<h2>What is this? 🔍</h2>
+<model-viewer id="mv" ar ar-modes="scene-viewer quick-look webxr" camera-controls auto-rotate>
+  <button slot="ar-button">👀 See in my room (AR)</button>
+</model-viewer>
+<p id="msg">Tap the mic and say the name!</p>
+<button id="mic">🎤 Speak</button>
+
+<script>
+// Add your own objects: accepted answers (a) and .glb model (m)
+const items = [
+  {a:["duck"],   m:"https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF-Binary/Duck.glb"},
+  {a:["fox"],    m:"https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Fox/glTF-Binary/Fox.glb"},
+  {a:["avocado"],m:"https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Avocado/glTF-Binary/Avocado.glb"},
+  {a:["lantern","lamp"], m:"https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Lantern/glTF-Binary/Lantern.glb"}
+];
+let i = 0;
+const mv = document.getElementById("mv"), msg = document.getElementById("msg");
+
+const say = t => { msg.textContent = t; speechSynthesis.speak(new SpeechSynthesisUtterance(t)); };
+const show = () => { mv.src = items[i].m; };
+show();
+
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+if (!SR) msg.textContent = "Please open in Chrome for voice.";
+else {
+  const r = new SR(); r.lang = "en-US";
+  r.onresult = e => {
+    const heard = e.results[0][0].transcript.toLowerCase();
+    if (items[i].a.some(w => heard.includes(w))) {
+      say("Good job! Correct!");
+      i = (i + 1) % items.length;
+      setTimeout(show, 2000);
+    } else say("Nice try! Let's try again.");
+  };
+  r.onerror = () => say("I couldn't hear you. Tap the mic again.");
+  document.getElementById("mic").onclick = () => { msg.textContent = "Listening... 👂"; r.start(); };
+}
+</script>
+</body>
+</html>
